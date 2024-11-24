@@ -12,8 +12,8 @@
       <env name="FLOWCI_TEMPLATES" value="https://raw.githubusercontent.com/FlowCI/templates/develop/templates.json" />
       <env name="FLOWCI_ZK_HOST" value="127.0.0.1" />
     </envs>
-    <module name="core" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="com.flowci.core.Application" />
+    <module name="flow-platform-x" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="com.flowci.Application" />
     <option name="VM_PARAMETERS" value="--add-opens java.base/java.lang=ALL-UNNAMED -Xms1g -Xmx1g -Xmn600m -XX:-UseAdaptiveSizePolicy -XX:SurvivorRatio=4 -verbose:gc" />
     <method v="2">
       <option name="Make" enabled="true" />
