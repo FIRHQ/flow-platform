@@ -1,0 +1,57 @@
+## Docker-Compose file is used to start dependent services
+
+version: '3'
+services:
+  db:
+    image: postgres:17
+    restart: always
+    container_name: flowci_local_db
+    shm_size: 128mb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: flowci
+      POSTGRES_PASSWORD: flowci
+      POSTGRES_DB: flowci_db
+
+#  zk:
+#    image: zookeeper:3.6
+#    container_name: flowci-debug-zk
+#    restart: always
+#    ports:
+#      - "2181:2181"
+#
+#  rabbitmq:
+#    image: rabbitmq:3-management
+#    container_name: flowci-debug-rabbitmq
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#
+#  minio:
+#    image: quay.io/minio/minio:RELEASE.2023-12-02T10-51-33Z
+#    container_name: flowci-debug-minio
+#    environment:
+#      MINIO_ROOT_USER: minio
+#      MINIO_ROOT_PASSWORD: minio123
+#    ports:
+#      - "9000:9000"
+#      - "9090:9090"
+#    command: "server /data --console-address \":9090\""
+
+#  prometheus:
+#    image: prom/prometheus:v2.44.0
+#    container_name: prometheus
+#    ports:
+#      - "9191:9090"
+#    volumes:
+#      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+
+#  grafana:
+#    image: grafana/grafana:9.5.2
+#    container_name: grafana
+#    ports:
+#      - "3131:3000"
+#    restart: unless-stopped
+#    volumes:
+#      - ./observability/grafana/datasources:/etc/grafana/provisioning/datasources

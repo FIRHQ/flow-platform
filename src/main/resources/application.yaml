@@ -6,6 +6,10 @@ spring:
       enabled: true
       max-file-size: 100MB
       location: ${java.io.tmpdir}
+  config:
+    import:
+      - classpath:application-management.yaml
+      - classpath:application-db.yaml
 
 server:
   port: ${FLOWCI_SERVER_PORT:8080}
@@ -14,33 +18,3 @@ server:
     whitelabel:
       enabled: false
     path: /error
-
-management:
-  server:
-    port: ${FLOWCI_MANAGEMENT_PORT:8081}
-  metrics:
-    enable:
-      all: true
-      hikaricp:
-        connections:
-          usage: true
-  endpoint:
-    health:
-      probes:
-        enabled: true
-      show-details: always
-    metrics:
-      enabled: true
-  info:
-    git:
-      enabled: true
-      mode: full
-    java:
-      enabled: true
-    os:
-      enabled: true
-  endpoints:
-    web:
-      base-path: /actuator
-      exposure:
-        include: health,info,metrics,openapi,prometheus,swagger-ui

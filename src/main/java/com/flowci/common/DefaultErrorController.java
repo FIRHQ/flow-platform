@@ -1,7 +1,7 @@
 package com.flowci.common;
 
 import com.flowci.common.exception.BusinessException;
-import com.flowci.common.module.ErrorResponse;
+import com.flowci.common.model.ErrorResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

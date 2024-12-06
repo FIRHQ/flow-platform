@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/flowci_db
+    username: postgres
+    password: flowci
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 10
+
+  flyway:
+    enabled: true
+    baselineOnMigrate: true
+    validateOnMigrate: true
+    locations: classpath:db/migration
+
+  jpa:
+    generate-ddl: false
+    show-sql: false
+    hibernate.ddl-auto: none
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
