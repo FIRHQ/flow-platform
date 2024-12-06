@@ -5,13 +5,14 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Getter
 @Setter
 @EntityListeners(EntityListener.class)
 @MappedSuperclass
-public abstract class EntityBase {
+public abstract class EntityBase implements Serializable {
 
     protected Instant createdAt;
 

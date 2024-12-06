@@ -1,6 +1,7 @@
 package com.flowci.flow.model;
 
 import com.flowci.common.model.EntityBase;
+import com.flowci.common.model.Variables;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,4 +29,7 @@ public final class Flow extends EntityBase {
     private Type type;
 
     private Long parentId = ROOT_ID;
+
+    @Convert(converter = Variables.AttributeConverter.class)
+    private Variables variables = new Variables();
 }

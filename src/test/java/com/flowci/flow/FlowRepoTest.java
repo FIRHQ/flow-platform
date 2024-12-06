@@ -19,7 +19,7 @@ class FlowRepoTest extends SpringTestWithDB {
     private FlowRepo flowRepo;
 
     @Test
-    void givenFlow_whenSave_thenIdAndTimestampCreated() {
+    void givenFlow_whenSaving_thenIdAndTimestampCreated() {
         var flow = Instancio.of(Flow.class)
                 .ignore(field(Flow::getId))
                 .ignore(all(Instant.class))
@@ -31,9 +31,13 @@ class FlowRepoTest extends SpringTestWithDB {
         assertNotNull(flow.getCreatedAt());
         assertNotNull(flow.getUpdatedAt());
 
+        var optional = flowRepo.findById(flow.getId());
+        assertTrue(optional.isPresent());
 
-        var fetched = flowRepo.findById(flow.getId());
-        assertTrue(fetched.isPresent());
-        assertEquals(flow, fetched.get());
+        var fetched = optional.get();
+        assertEquals(flow, fetched);
+        assertEquals(flow.getCreatedAt(), fetched.getCreatedAt());
+        assertEquals(flow.getUpdatedAt(), fetched.getUpdatedAt());
+        assertEquals(flow.getVariables().size(), fetched.getVariables().size());
     }
 }
