@@ -11,13 +11,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false, of = "id")
 public final class Flow extends EntityBase {
 
-    public final static Long ROOT_ID = 0L;
-
-    public enum Type {
-        GROUP,
-        FLOW,
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "flows_id_gen")
     @SequenceGenerator(name = "flows_id_gen", sequenceName = "flows_id_sequence", allocationSize = 1)
@@ -25,11 +18,18 @@ public final class Flow extends EntityBase {
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private Type type;
-
-    private Long parentId = ROOT_ID;
+    // parent group id
+    private Long parentId = Group.ROOT_ID;
 
     @Convert(converter = Variables.AttributeConverter.class)
     private Variables variables = new Variables();
+
+    @Convert(converter = GitLink.Converter.class)
+    private GitLink gitLink;
+
+    private int maxQueueTime = 3600; // in seconds
+
+    private int stepTimeout = 1800; // job step timeout in second;
+
+    private String cron;
 }

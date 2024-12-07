@@ -14,28 +14,14 @@ import java.util.Map;
  * Represent variables by hashmap
  */
 @Getter
-public final class Variables implements Serializable {
-
-    private final Map<String, String> data;
+public final class Variables extends HashMap<String, String> implements Serializable {
 
     public Variables() {
-        this.data = new HashMap<>(5);
+        super(5);
     }
 
     public Variables(Map<String, String> data) {
-        this.data = data;
-    }
-
-    public String get(String key) {
-        return data.get(key);
-    }
-
-    public void put(String key, String value) {
-        data.put(key, value);
-    }
-
-    public int size() {
-        return data.size();
+        this.putAll(data);
     }
 
     @Converter(autoApply = true)
@@ -47,7 +33,7 @@ public final class Variables implements Serializable {
         @Override
         public String convertToDatabaseColumn(Variables attribute) {
             try {
-                return ObjectMapperFactory.instance().writeValueAsString(attribute.data);
+                return ObjectMapperFactory.instance().writeValueAsString(attribute);
             } catch (JsonProcessingException e) {
                 throw new IllegalStateException("Unable to convert variables to JSON", e);
             }

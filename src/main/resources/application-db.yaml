@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/flowci_db
-    username: postgres
+    username: flowci
     password: flowci
     hikari:
       minimum-idle: 5

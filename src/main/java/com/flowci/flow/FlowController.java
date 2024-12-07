@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FlowController {
 
     @GetMapping("/{id}")
-    public Flow getFlow(@PathVariable("id") String id) {
+    public Flow getFlow(@PathVariable("id") Long id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
