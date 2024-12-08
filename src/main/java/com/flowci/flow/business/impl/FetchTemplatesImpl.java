@@ -2,7 +2,7 @@ package com.flowci.flow.business.impl;
 
 import com.flowci.common.config.AppProperties;
 import com.flowci.common.exception.NotAvailableException;
-import com.flowci.flow.business.FetchYamlTemplates;
+import com.flowci.flow.business.FetchTemplates;
 import com.flowci.flow.model.YamlTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,7 +17,7 @@ import static com.flowci.common.config.CacheConfig.YAML_TEMPLATE_CACHE_MANAGER;
 
 @Slf4j
 @Service
-public class FetchYamlTemplatesImpl implements FetchYamlTemplates {
+public class FetchTemplatesImpl implements FetchTemplates {
 
     private final RestClient restClient = RestClient.create();
 
@@ -27,7 +27,7 @@ public class FetchYamlTemplatesImpl implements FetchYamlTemplates {
 
     private final AppProperties appProperties;
 
-    public FetchYamlTemplatesImpl(AppProperties appProperties) {
+    public FetchTemplatesImpl(AppProperties appProperties) {
         this.appProperties = appProperties;
     }
 

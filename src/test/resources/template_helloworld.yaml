@@ -1,0 +1,80 @@
+#
+# Example YAML for flow.ci
+#
+
+#  environment variables in flow level which can be used in every steps
+envs:
+  # Define Flow level variables
+  EXAMPLE_VAR: "Hi, I'am an example YAML"
+
+steps:
+  - name: run script
+    envs:
+      SAY_HELLO: "hello.flow.ci"
+    allow_failure: true
+    bash: |
+      echo ${SAY_HELLO} ${EXAMPLE_VAR}
+      sleep 1
+
+  - name: build in envs
+    bash: |
+      echo "Server URL = ${FLOWCI_SERVER_URL}"
+      echo "Ttoken = ${FLOWCI_AGENT_TOKEN}"
+      echo "Port = ${FLOWCI_AGENT_PORT}"
+      echo "Workspace = ${FLOWCI_AGENT_WORKSPACE}"
+      echo "Current job dir = ${FLOWCI_AGENT_JOB_DIR}"
+      echo "Plugin dir = ${FLOWCI_AGENT_PLUGIN_DIR}"
+      echo "IP of en0 = ${FLOWCI_AGENT_IP_en0}" 
+
+  - name: state example
+    docker:
+      image: ubuntu:18.04
+    bash: |
+      echo 'this will executed on each sub steps'
+    steps:
+      - name: install dep A
+        bash: |
+          echo 'install something about A'
+          echo 'the docker image from parent step will be used'
+      - name: install dep B
+        docker:
+          image: node:14
+        bash: |
+          echo 'install something about B'
+          echo 'the docker image on current step will be used'
+
+  - name: run from docker
+    envs:
+      COND_VAR: "hello"
+    condition: |
+      return "$COND_VAR" == "hello"
+    docker:
+      image: golang:1.12
+    bash: |
+      go get github.com/golang/example/hello
+      $GOPATH/bin/hello
+
+  - name: run mutiple dockers
+    dockers:
+      - image: flowci/debian-docker
+        is_runtime: true
+
+      - image: mysql:5.6
+        environment:
+          MYSQL_ROOT_PASSWORD: 12345
+    bash: |
+      ## print container id
+      echo "ubuntu:18.04 id = $CONTAINER_ID_0"
+      echo "mysql:5.6 id    = $CONTAINER_ID_1"
+
+      ## print container ip, network mode is 'bridge' by default
+      echo "ubuntu:18.04 ip = $CONTAINER_IP_0"
+      echo "mysql:5.6 ip    = $CONTAINER_IP_1"
+
+      python3 --version
+
+      ## wait-for-it.sh is built-in command to wait for other service, bash only
+      wait-for-it.sh ${CONTAINER_IP_1}:3306 -t 30
+      if [ $? == 0 ];then
+        docker run --network ${FLOWCI_AGENT_DOCKER_NETWORK} --rm mysql:5.6 mysql -h${CONTAINER_IP_1} -uroot -p12345 mysql -e "select * from user"
+      fi

@@ -168,6 +168,7 @@
           <parallel>classes</parallel>
           <threadCount>4</threadCount>
           <perCoreThreadCount>true</perCoreThreadCount>
+          <useSystemClassLoader>false</useSystemClassLoader>
           <properties>
             <configurationParameters>
               junit.jupiter.execution.parallel.enabled=true

@@ -4,6 +4,9 @@ import com.flowci.flow.model.YamlTemplate;
 
 import java.util.List;
 
-public interface FetchYamlTemplates {
+/**
+ * Fetch template configuration
+ */
+public interface FetchTemplates {
     List<YamlTemplate> invoke();
 }

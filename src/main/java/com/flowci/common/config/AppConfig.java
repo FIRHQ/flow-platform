@@ -1,5 +1,6 @@
 package com.flowci.common.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.flowci.common.ObjectMapperFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
@@ -22,6 +23,11 @@ import java.util.List;
 @EnableCaching
 @EnableConfigurationProperties(AppProperties.class)
 public class AppConfig {
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return ObjectMapperFactory.instance();
+    }
 
     @Bean
     public WebMvcConfigurer webMvcConfigurer() {

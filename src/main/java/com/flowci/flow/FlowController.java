@@ -1,6 +1,6 @@
 package com.flowci.flow;
 
-import com.flowci.flow.business.FetchYamlTemplates;
+import com.flowci.flow.business.FetchTemplates;
 import com.flowci.flow.model.Flow;
 import com.flowci.flow.model.YamlTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +16,10 @@ import java.util.List;
 @RequestMapping("/v2/flows")
 public class FlowController {
 
-    public final FetchYamlTemplates fetchYamlTemplates;
+    public final FetchTemplates fetchTemplates;
 
-    public FlowController(FetchYamlTemplates fetchYamlTemplates) {
-        this.fetchYamlTemplates = fetchYamlTemplates;
+    public FlowController(FetchTemplates fetchTemplates) {
+        this.fetchTemplates = fetchTemplates;
     }
 
     @GetMapping("/{id}")
@@ -29,6 +29,6 @@ public class FlowController {
 
     @GetMapping("/templates")
     public List<YamlTemplate> getTemplates() {
-        return fetchYamlTemplates.invoke();
+        return fetchTemplates.invoke();
     }
 }

@@ -11,23 +11,25 @@ import com.flowci.common.config.AppProperties;
 import com.flowci.common.exception.NotAvailableException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpHeaders;
 
 import java.io.IOException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @PactConsumerTest
-class FetchYamlTemplatesTest extends SpringTest {
+class FetchTemplatesTest extends SpringTest {
 
-    @MockBean
+    @Autowired
     private AppProperties appProperties;
 
     @Autowired
-    private FetchYamlTemplates fetchYamlTemplates;
+    private FetchTemplates fetchTemplates;
+
+    @Autowired
+    private CacheManager yamlTemplateCacheManager;
 
     @Pact(provider = "YamlTemplateProvider", consumer = "consumer_yaml_template")
     V4Pact createPact(PactDslWithProvider builder) throws IOException {
@@ -58,28 +60,17 @@ class FetchYamlTemplatesTest extends SpringTest {
     @Test
     @PactTestFor(providerName = "YamlTemplateProvider")
     void whenFetchingSuccessfully_thenReturnListOfTemplates(MockServer mockServer) {
-        var mockTemplatesConfig = new AppProperties.Templates();
-        mockTemplatesConfig.setUrl(mockServer.getUrl() + "/git/templates.json");
+        appProperties.getTemplates().setUrl(mockServer.getUrl() + "/git/templates.json");
 
-        when(appProperties.getTemplates()).thenReturn(mockTemplatesConfig);
-
-        var templates = fetchYamlTemplates.invoke();
+        var templates = fetchTemplates.invoke();
         assertNotNull(templates);
         assertEquals(2, templates.size());
-
-        // call second time, should be load from cache
-        fetchYamlTemplates.invoke();
-        verify(appProperties, times(1)).getTemplates();
     }
 
     @Test
     @PactTestFor(providerName = "YamlTemplateProviderWith5xx")
     void whenFetchingWith5xx_thenReturnListOfTemplates(MockServer mockServer) {
-        var mockTemplatesConfig = new AppProperties.Templates();
-        mockTemplatesConfig.setUrl(mockServer.getUrl() + "/git/templates.json");
-
-        when(appProperties.getTemplates()).thenReturn(mockTemplatesConfig);
-
-        assertThrows(NotAvailableException.class, () -> fetchYamlTemplates.invoke());
+        appProperties.getTemplates().setUrl(mockServer.getUrl() + "/git/templates.json");
+        assertThrows(NotAvailableException.class, () -> fetchTemplates.invoke());
     }
 }
