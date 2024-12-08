@@ -1,0 +1,4 @@
+flowci:
+  templates:
+    url: https://raw.githubusercontent.com/FlowCI/templates/refs/heads/master/templates.json
+    cache-expire-in-minutes: 60

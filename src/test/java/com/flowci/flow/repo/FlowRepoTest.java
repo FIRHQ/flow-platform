@@ -1,8 +1,7 @@
-package com.flowci.flow;
+package com.flowci.flow.repo;
 
 import com.flowci.SpringTestWithDB;
 import com.flowci.flow.model.Flow;
-import com.flowci.flow.repo.FlowRepo;
 import org.instancio.Instancio;
 import org.instancio.InstancioApi;
 import org.junit.jupiter.api.Test;

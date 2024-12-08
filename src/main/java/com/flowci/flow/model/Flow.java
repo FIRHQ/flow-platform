@@ -27,9 +27,6 @@ public final class Flow extends EntityBase {
     @Convert(converter = GitLink.Converter.class)
     private GitLink gitLink;
 
-    private int maxQueueTime = 3600; // in seconds
-
-    private int stepTimeout = 1800; // job step timeout in second;
-
-    private String cron;
+    // raw yaml configuration
+    private String yaml;
 }

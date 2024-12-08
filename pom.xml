@@ -19,6 +19,7 @@
     <testcontainers.version>1.20.4</testcontainers.version>
     <springdoc-openapi.version>2.5.0</springdoc-openapi.version>
     <flyway-core.version>11.0.1</flyway-core.version>
+    <pact.version>4.6.16</pact.version>
   </properties>
 
   <dependencyManagement>
@@ -70,6 +71,16 @@
     </dependency>
 
     <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-cache</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.ben-manes.caffeine</groupId>
+      <artifactId>caffeine</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
       <version>${springdoc-openapi.version}</version>
@@ -107,6 +118,20 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>au.com.dius.pact.provider</groupId>
+      <artifactId>junit5</artifactId>
+      <version>${pact.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>au.com.dius.pact.consumer</groupId>
+      <artifactId>junit5</artifactId>
+      <version>${pact.version}</version>
       <scope>test</scope>
     </dependency>
 

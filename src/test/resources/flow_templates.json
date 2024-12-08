@@ -1,0 +1,15 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/FlowCI/templates/master/helloworld.yaml",
+    "url_cn": "https://gitee.com/flow_ci/flow-templates/raw/master/helloworld.yaml",
+    "title": "Hello World",
+    "desc": "Sample template shows how to define steps",
+    "default": true
+  },
+  {
+    "url": "https://raw.githubusercontent.com/FlowCI/templates/master/maven.yaml",
+    "url_cn": "https://gitee.com/flow_ci/flow-templates/raw/master/maven.yaml",
+    "title": "Maven",
+    "desc": "Template of how to build, test Maven project"
+  }
+]
