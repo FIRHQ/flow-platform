@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 import static com.flowci.common.config.CacheConfig.YAML_TEMPLATE_CACHE_MANAGER;
 
 @Slf4j
-@Service
+@Component
 public class FetchTemplatesImpl implements FetchTemplates {
 
     private final RestClient restClient = RestClient.create();

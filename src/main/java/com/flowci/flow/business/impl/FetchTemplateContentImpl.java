@@ -5,13 +5,13 @@ import com.flowci.flow.business.FetchTemplateContent;
 import com.flowci.flow.business.FetchTemplates;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import static com.flowci.common.config.CacheConfig.YAML_TEMPLATE_CACHE_MANAGER;
 
 @Slf4j
-@Service
+@Component
 public class FetchTemplateContentImpl implements FetchTemplateContent {
 
     private final RestClient restClient = RestClient.create();

@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/v2/flows")
 public class FlowController {
 
-    public final FetchTemplates fetchTemplates;
+    private final FetchTemplates fetchTemplates;
 
     public FlowController(FetchTemplates fetchTemplates) {
         this.fetchTemplates = fetchTemplates;
