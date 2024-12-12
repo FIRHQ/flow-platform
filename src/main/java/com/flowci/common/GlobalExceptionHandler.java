@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import static com.flowci.common.exception.ExceptionUtils.findRootCause;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -35,7 +36,10 @@ public final class GlobalExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler({BusinessException.class, MissingServletRequestParameterException.class})
+    @ExceptionHandler({
+            BusinessException.class,
+            MissingServletRequestParameterException.class
+    })
     public ResponseEntity<ErrorResponse> onBusinessException(Throwable e) {
         return ResponseEntity.status(BAD_REQUEST)
                 .body(new ErrorResponse(BAD_REQUEST.value(), e.getMessage()));
@@ -47,6 +51,6 @@ public final class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> fatalException(Throwable e) {
         log.error("Fatal exception", e);
         return ResponseEntity.status(INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(INTERNAL_SERVER_ERROR.value(), e.getMessage()));
+                .body(new ErrorResponse(INTERNAL_SERVER_ERROR.value(), findRootCause(e).getMessage()));
     }
 }

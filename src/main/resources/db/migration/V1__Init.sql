@@ -5,7 +5,7 @@ CREATE TABLE groups
 (
     id         BIGSERIAL PRIMARY KEY,
     parent_id  BIGINT                      NOT NULL,
-    name       VARCHAR(200) UNIQUE         NOT NULL,
+    name       VARCHAR(100) UNIQUE         NOT NULL,
     variables  TEXT                        NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     created_by VARCHAR(200),
@@ -20,10 +20,20 @@ CREATE TABLE flows
 (
     id         BIGSERIAL PRIMARY KEY,
     parent_id  BIGINT                      NOT NULL,
-    name       VARCHAR(200) UNIQUE         NOT NULL,
+    name       VARCHAR(100) UNIQUE         NOT NULL,
     variables  TEXT                        NOT NULL,
     git_link   TEXT,
     yaml       TEXT,
+    created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    created_by VARCHAR(200),
+    updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    updated_by VARCHAR(200)
+);
+
+CREATE TABLE flows_yaml
+(
+    id         BIGINT PRIMARY KEY,
+    yaml       TEXT                        NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     created_by VARCHAR(200),
     updated_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,

@@ -1,12 +1,14 @@
 package com.flowci;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
-public abstract class SpringTestWithDB extends SpringTest {
+@SpringBootTest
+public abstract class SpringTestWithDB {
 
     @Container
     static final PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:17")

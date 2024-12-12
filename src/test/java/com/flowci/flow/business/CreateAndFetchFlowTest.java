@@ -1,12 +1,12 @@
 package com.flowci.flow.business;
 
 import com.flowci.SpringTestWithDB;
-import com.flowci.common.exception.DuplicateException;
 import com.flowci.flow.model.CreateFlowParam;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -20,6 +20,9 @@ class CreateAndFetchFlowTest extends SpringTestWithDB {
     @Autowired
     private FetchFlow fetchFlow;
 
+    @Autowired
+    private FetchFlowYamlContent fetchFlowYamlContent;
+
     @MockBean
     private FetchTemplateContent fetchTemplateContent;
 
@@ -31,12 +34,13 @@ class CreateAndFetchFlowTest extends SpringTestWithDB {
 
     @Test
     void whenCreateFlowWithTemplate_thenFlowCreatedWithTemplateYamlContent() {
-        var id = createFlow.invoke(new CreateFlowParam("test flow", "helloworld", null));
+        var flow = createFlow.invoke(new CreateFlowParam("test flow", "helloworld", null));
 
-        var f = fetchFlow.invoke(id);
+        var f = fetchFlow.invoke(flow.getId());
         assertNotNull(f);
 
-        assertEquals("helloworld yaml", f.getYaml());
+        var yaml = fetchFlowYamlContent.invoke(flow.getId());
+        assertEquals("helloworld yaml", yaml);
         assertNotNull(f.getCreatedBy());
         assertNotNull(f.getUpdatedBy());
     }
@@ -45,7 +49,7 @@ class CreateAndFetchFlowTest extends SpringTestWithDB {
     void whenCreateFlowWithDuplicatedName_thenThrowException() {
         createFlow.invoke(new CreateFlowParam("flow A", null, null));
 
-        assertThrows(DuplicateException.class, () ->
+        assertThrows(DataIntegrityViolationException.class, () ->
                 createFlow.invoke(new CreateFlowParam("flow A", null, null)));
     }
 }

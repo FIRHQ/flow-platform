@@ -18,7 +18,7 @@ class ExceptionUtilsTest {
     @Test
     void whenThrowDataAccessException_thenConvertToDuplicatedExceptionAsExpected() {
         var sqlEx = mock(SQLException.class);
-        when(sqlEx.getErrorCode()).thenReturn(23505);
+        when(sqlEx.getSQLState()).thenReturn("23505");
         var dataAccessEx = new DataIntegrityViolationException("something wrong", sqlEx);
 
         assertThrows(DuplicateException.class, () -> {
@@ -29,7 +29,7 @@ class ExceptionUtilsTest {
     @Test
     void whenThrowDataAccessException_thenThrowRuntimeExceptionIfExpectedExceptionNotAvailable() {
         var sqlEx = mock(SQLException.class);
-        when(sqlEx.getErrorCode()).thenReturn(23505);
+        when(sqlEx.getSQLState()).thenReturn("23505");
         var dataAccessEx = new DataIntegrityViolationException("something wrong", sqlEx);
 
         assertThrows(FatalException.class, () -> {

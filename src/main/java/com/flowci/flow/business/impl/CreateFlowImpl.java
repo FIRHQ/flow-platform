@@ -1,17 +1,17 @@
 package com.flowci.flow.business.impl;
 
 import com.flowci.common.RequestContextHolder;
-import com.flowci.common.exception.DuplicateException;
 import com.flowci.flow.business.CreateFlow;
 import com.flowci.flow.business.FetchTemplateContent;
 import com.flowci.flow.model.CreateFlowParam;
 import com.flowci.flow.model.Flow;
+import com.flowci.flow.model.FlowYaml;
 import com.flowci.flow.repo.FlowRepo;
+import com.flowci.flow.repo.FlowYamlRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import static com.flowci.common.exception.ExceptionUtils.tryConvertToBusinessException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -20,21 +20,19 @@ public class CreateFlowImpl implements CreateFlow {
 
     private final FlowRepo flowRepo;
 
+    private final FlowYamlRepo flowYamlRepo;
+
     private final FetchTemplateContent fetchTemplateContent;
 
     private final RequestContextHolder requestContextHolder;
 
     @Override
-    public Long invoke(CreateFlowParam param) {
-        var flow = toObject(param);
-
-        try {
-            var saved = flowRepo.save(flow);
-            log.info("Created flow: {} by user {}", flow.getName(), flow.getCreatedBy());
-            return saved.getId();
-        } catch (Throwable e) {
-            throw tryConvertToBusinessException(e, DuplicateException.class, "dup");
-        }
+    @Transactional
+    public Flow invoke(CreateFlowParam param) {
+        var flow = flowRepo.save(toObject(param));
+        flowYamlRepo.save(toObject(flow, param));
+        log.info("Created flow: {} by user {}", flow.getName(), flow.getCreatedBy());
+        return flow;
     }
 
     private Flow toObject(CreateFlowParam param) {
@@ -47,11 +45,19 @@ public class CreateFlowImpl implements CreateFlow {
             flow.setParentId(param.rootId());
         }
 
-        if (param.template() != null) {
-            var templateYaml = fetchTemplateContent.invoke(param.template());
-            flow.setYaml(templateYaml);
+        return flow;
+    }
+
+    private FlowYaml toObject(Flow flow, CreateFlowParam param) {
+        var flowYaml = new FlowYaml();
+        flowYaml.setId(flow.getId());
+        flowYaml.setCreatedBy(flow.getCreatedBy());
+        flowYaml.setUpdatedBy(flow.getUpdatedBy());
+
+        if (!param.isBlank()) {
+            flowYaml.setYaml(fetchTemplateContent.invoke(param.template()));
         }
 
-        return flow;
+        return flowYaml;
     }
 }

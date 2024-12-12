@@ -40,7 +40,7 @@ public abstract class ExceptionUtils {
         }
     }
 
-    private static Throwable findRootCause(Throwable t) {
+    public static Throwable findRootCause(Throwable t) {
         if (t.getCause() != null) {
             return findRootCause(t.getCause());
         }

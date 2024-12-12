@@ -26,7 +26,4 @@ public final class Flow extends EntityBase {
 
     @Convert(converter = GitLink.Converter.class)
     private GitLink gitLink;
-
-    // raw yaml configuration
-    private String yaml;
 }

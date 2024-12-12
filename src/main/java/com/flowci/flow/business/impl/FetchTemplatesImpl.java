@@ -19,15 +19,16 @@ import static com.flowci.common.config.CacheConfig.YAML_TEMPLATE_CACHE_MANAGER;
 @Component
 public class FetchTemplatesImpl implements FetchTemplates {
 
-    private final RestClient restClient = RestClient.create();
-
     private final ParameterizedTypeReference<List<YamlTemplate>> responseType =
             new ParameterizedTypeReference<>() {
             };
 
+    private final RestClient templateRestClient;
+
     private final AppProperties appProperties;
 
-    public FetchTemplatesImpl(AppProperties appProperties) {
+    public FetchTemplatesImpl(RestClient templateRestClient, AppProperties appProperties) {
+        this.templateRestClient = templateRestClient;
         this.appProperties = appProperties;
     }
 
@@ -36,7 +37,7 @@ public class FetchTemplatesImpl implements FetchTemplates {
     public List<YamlTemplate> invoke() {
         var url = appProperties.getTemplates().getUrl();
 
-        return restClient.get()
+        return templateRestClient.get()
                 .uri(url)
                 .retrieve()
                 .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
