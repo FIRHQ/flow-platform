@@ -1,6 +1,7 @@
 package com.flowci.flow.business.impl;
 
 import com.flowci.common.RequestContextHolder;
+import com.flowci.common.model.Variables;
 import com.flowci.flow.business.CreateFlow;
 import com.flowci.flow.business.FetchTemplateContent;
 import com.flowci.flow.model.CreateFlowParam;
@@ -38,6 +39,8 @@ public class CreateFlowImpl implements CreateFlow {
     private Flow toObject(CreateFlowParam param) {
         var flow = new Flow();
         flow.setName(param.name());
+        flow.setType(Flow.Type.FLOW);
+        flow.setVariables(Variables.EMPTY);
         flow.setCreatedBy(requestContextHolder.getUser());
         flow.setUpdatedBy(requestContextHolder.getUser());
 

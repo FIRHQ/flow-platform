@@ -1,7 +1,7 @@
 package com.flowci.flow.business;
 
 import com.flowci.SpringTest;
-import com.flowci.flow.model.Group;
+import com.flowci.flow.model.Flow;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,25 +22,26 @@ class InitRootGroupTest extends SpringTest {
 
     @Test
     void whenEmptyDatabase_thenDefaultRootGroupShouldBeCreated() {
-        var groupRepoMock = repositoriesConfig.getGroupRepo();
+        var groupRepoMock = repositoriesConfig.getFlowRepo();
         when(groupRepoMock.findById(any())).thenReturn(Optional.empty());
 
-        var argCaptor = ArgumentCaptor.forClass(Group.class);
-        when(groupRepoMock.save(argCaptor.capture())).thenReturn(mock(Group.class));
+        var argCaptor = ArgumentCaptor.forClass(Flow.class);
+        when(groupRepoMock.save(argCaptor.capture())).thenReturn(mock(Flow.class));
 
         initRootGroup.invoke();
         verify(groupRepoMock, times(1)).save(argCaptor.capture());
 
         var groupParam = argCaptor.getValue();
-        assertEquals(Group.ROOT_NAME, groupParam.getName());
+        assertEquals(Flow.ROOT_NAME, groupParam.getName());
+        assertEquals(Flow.Type.GROUP, groupParam.getType());
     }
 
     @Test
     void whenRootGroupExisted_thenSkipToCreateIt() {
-        var groupRepoMock = repositoriesConfig.getGroupRepo();
-        when(groupRepoMock.findById(any())).thenReturn(Optional.of(mock(Group.class)));
+        var groupRepoMock = repositoriesConfig.getFlowRepo();
+        when(groupRepoMock.findById(any())).thenReturn(Optional.of(mock(Flow.class)));
 
         initRootGroup.invoke();
-        verify(groupRepoMock, times(0)).save(any(Group.class));
+        verify(groupRepoMock, times(0)).save(any(Flow.class));
     }
 }

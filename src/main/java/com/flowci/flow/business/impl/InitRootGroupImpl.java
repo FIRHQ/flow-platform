@@ -2,8 +2,8 @@ package com.flowci.flow.business.impl;
 
 import com.flowci.common.model.Variables;
 import com.flowci.flow.business.InitRootGroup;
-import com.flowci.flow.model.Group;
-import com.flowci.flow.repo.GroupRepo;
+import com.flowci.flow.model.Flow;
+import com.flowci.flow.repo.FlowRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -13,23 +13,24 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class InitRootGroupImpl implements InitRootGroup {
 
-    private final GroupRepo groupRepo;
+    private final FlowRepo flowRepo;
 
     @Override
     public void invoke() {
-        var optional = groupRepo.findById(Group.ROOT_ID);
+        var optional = flowRepo.findById(Flow.ROOT_ID);
         if (optional.isPresent()) {
-            log.info("Root group '{}' already exists", Group.ROOT_NAME);
+            log.info("Root flow group '{}' already exists", Flow.ROOT_NAME);
             return;
         }
 
-        var root = new Group();
-        root.setName(Group.ROOT_NAME);
-        root.setParentId(Group.ROOT_ID);
+        var root = new Flow();
+        root.setType(Flow.Type.GROUP);
+        root.setName(Flow.ROOT_NAME);
+        root.setParentId(Flow.ROOT_ID);
         root.setVariables(Variables.EMPTY);
         root.setCreatedBy("system");
         root.setUpdatedBy("system");
-        groupRepo.save(root);
-        log.info("Root group '{}' is created", root.getName());
+        flowRepo.save(root);
+        log.info("Root flow group '{}' is created", root.getName());
     }
 }
