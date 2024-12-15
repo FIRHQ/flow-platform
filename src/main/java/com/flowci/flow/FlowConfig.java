@@ -1,6 +1,9 @@
 package com.flowci.flow;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flowci.flow.business.InitRootGroup;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -25,5 +28,14 @@ public class FlowConfig {
                     httpMessageConverters.clear();
                     httpMessageConverters.add(converter);
                 }).build();
+    }
+
+    @Bean
+    @ConditionalOnProperty(
+            name = "flowci.init.root-group",
+            havingValue = "true",
+            matchIfMissing = true)
+    public CommandLineRunner initRootGroup(InitRootGroup initRootGroup) {
+        return args -> initRootGroup.invoke();
     }
 }

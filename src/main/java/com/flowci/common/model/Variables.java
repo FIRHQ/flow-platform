@@ -16,6 +16,12 @@ import java.util.Map;
 @Getter
 public final class Variables extends HashMap<String, String> implements Serializable {
 
+    public static final Variables EMPTY = new Variables(0);
+
+    public Variables(int initialCapacity) {
+        super(initialCapacity);
+    }
+
     public Variables() {
         super(5);
     }

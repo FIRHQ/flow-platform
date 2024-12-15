@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 public class Group extends EntityBase {
 
     public final static Long ROOT_ID = 10000L;
+    public final static String ROOT_NAME = "flows";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "groups_id_gen")
