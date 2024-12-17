@@ -21,11 +21,11 @@ public abstract class EntityBase implements Serializable {
 
     protected Instant createdAt;
 
-    protected String createdBy;
+    protected Long createdBy;
 
     protected Instant updatedAt;
 
-    protected String updatedBy;
+    protected Long updatedBy;
 
     @Converter
     public abstract static class ObjectAttributeConverter<T> implements AttributeConverter<T, String> {

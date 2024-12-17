@@ -1,6 +1,7 @@
 package com.flowci.common;
 
 import com.flowci.common.model.RequestContext;
+import com.flowci.user.model.User;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -12,8 +13,8 @@ public class RequestContextHolder {
         return CONTEXT_HOLDER.get();
     }
 
-    public String getUser() {
+    public Long getUserId() {
         // TODO: user auth
-        return "flowci";
+        return User.SYSTEM_USER;
     }
 }

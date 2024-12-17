@@ -1,6 +1,7 @@
 package com.flowci;
 
 import com.flowci.flow.repo.FlowRepo;
+import com.flowci.flow.repo.FlowUserRepo;
 import com.flowci.flow.repo.FlowYamlRepo;
 import lombok.Getter;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -39,6 +40,9 @@ public abstract class SpringTest {
 
         @MockBean
         private FlowYamlRepo flowYamlRepo;
+
+        @MockBean
+        private FlowUserRepo flowUserRepo;
     }
 
     @DynamicPropertySource

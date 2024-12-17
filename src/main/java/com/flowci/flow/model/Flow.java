@@ -7,7 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@Entity(name = "flows")
+@Entity
+@Table(name = "flows")
 @EqualsAndHashCode(callSuper = false, of = "id")
 public final class Flow extends EntityBase {
 

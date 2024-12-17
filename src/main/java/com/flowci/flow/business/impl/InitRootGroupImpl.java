@@ -4,6 +4,7 @@ import com.flowci.common.model.Variables;
 import com.flowci.flow.business.InitRootGroup;
 import com.flowci.flow.model.Flow;
 import com.flowci.flow.repo.FlowRepo;
+import com.flowci.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -28,8 +29,8 @@ public class InitRootGroupImpl implements InitRootGroup {
         root.setName(Flow.ROOT_NAME);
         root.setParentId(Flow.ROOT_ID);
         root.setVariables(Variables.EMPTY);
-        root.setCreatedBy("system");
-        root.setUpdatedBy("system");
+        root.setCreatedBy(User.SYSTEM_USER);
+        root.setUpdatedBy(User.SYSTEM_USER);
         flowRepo.save(root);
         log.info("Root flow group '{}' is created", root.getName());
     }

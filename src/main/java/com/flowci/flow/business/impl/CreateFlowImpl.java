@@ -6,8 +6,10 @@ import com.flowci.flow.business.CreateFlow;
 import com.flowci.flow.business.FetchTemplateContent;
 import com.flowci.flow.model.CreateFlowParam;
 import com.flowci.flow.model.Flow;
+import com.flowci.flow.model.FlowUser;
 import com.flowci.flow.model.FlowYaml;
 import com.flowci.flow.repo.FlowRepo;
+import com.flowci.flow.repo.FlowUserRepo;
 import com.flowci.flow.repo.FlowYamlRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,8 @@ public class CreateFlowImpl implements CreateFlow {
 
     private final FlowYamlRepo flowYamlRepo;
 
+    private final FlowUserRepo flowUserRepo;
+
     private final FetchTemplateContent fetchTemplateContent;
 
     private final RequestContextHolder requestContextHolder;
@@ -32,6 +36,7 @@ public class CreateFlowImpl implements CreateFlow {
     public Flow invoke(CreateFlowParam param) {
         var flow = flowRepo.save(toObject(param));
         flowYamlRepo.save(toObject(flow, param));
+        flowUserRepo.save(toObject(flow));
         log.info("Created flow: {} by user {}", flow.getName(), flow.getCreatedBy());
         return flow;
     }
@@ -41,19 +46,16 @@ public class CreateFlowImpl implements CreateFlow {
         flow.setName(param.name());
         flow.setType(Flow.Type.FLOW);
         flow.setVariables(Variables.EMPTY);
-        flow.setCreatedBy(requestContextHolder.getUser());
-        flow.setUpdatedBy(requestContextHolder.getUser());
-
-        if (param.rootId() != null) {
-            flow.setParentId(param.rootId());
-        }
-
+        flow.setParentId(param.rootId() == null ? Flow.ROOT_ID : param.rootId());
+        flow.setCreatedBy(requestContextHolder.getUserId());
+        flow.setUpdatedBy(requestContextHolder.getUserId());
         return flow;
     }
 
     private FlowYaml toObject(Flow flow, CreateFlowParam param) {
         var flowYaml = new FlowYaml();
         flowYaml.setId(flow.getId());
+        flowYaml.setYaml("");
         flowYaml.setCreatedBy(flow.getCreatedBy());
         flowYaml.setUpdatedBy(flow.getUpdatedBy());
 
@@ -62,5 +64,14 @@ public class CreateFlowImpl implements CreateFlow {
         }
 
         return flowYaml;
+    }
+
+    private FlowUser toObject(Flow flow) {
+        var fu = new FlowUser();
+        fu.setFlowId(flow.getId());
+        fu.setUserId(flow.getCreatedBy());
+        fu.setCreatedBy(flow.getCreatedBy());
+        fu.setUpdatedBy(flow.getUpdatedBy());
+        return fu;
     }
 }
