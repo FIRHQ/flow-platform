@@ -1,6 +1,7 @@
 package com.flowci.flow.business.impl;
 
 import com.flowci.common.RequestContextHolder;
+import com.flowci.flow.business.FetchFlow;
 import com.flowci.flow.business.ListFlows;
 import com.flowci.flow.model.Flow;
 import com.flowci.flow.repo.FlowRepo;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -19,6 +21,8 @@ public class ListFlowsImpl implements ListFlows {
 
     private final FlowRepo flowRepo;
 
+    private final FetchFlow fetchFlow;
+
     private final RequestContextHolder requestContextHolder;
 
     @Override
@@ -27,10 +31,15 @@ public class ListFlowsImpl implements ListFlows {
             parentId = Flow.ROOT_ID;
         }
 
-        return flowRepo.findAllByParentIdAndUserIdOrderByCreatedAt(
+        var list = flowRepo.findAllByParentIdAndUserIdOrderByCreatedAt(
                 parentId,
                 requestContextHolder.getUserId(),
                 pageRequest
         );
+
+        var r = new ArrayList<Flow>(list.size() + 1);
+        r.add(fetchFlow.invoke(Flow.ROOT_ID));
+        r.addAll(list);
+        return r;
     }
 }

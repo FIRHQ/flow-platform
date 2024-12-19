@@ -10,6 +10,7 @@ import com.flowci.flow.business.ListFlows;
 import com.flowci.flow.model.CreateFlowParam;
 import com.flowci.flow.model.Flow;
 import com.flowci.flow.model.YamlTemplate;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,7 @@ import static java.lang.Long.parseLong;
 @RestController
 @RequestMapping("/v2/flows")
 @AllArgsConstructor
+@Tag(name = "flow")
 public class FlowController {
 
     private final FetchTemplates fetchTemplates;
@@ -41,9 +43,17 @@ public class FlowController {
     }
 
     @GetMapping
-    public List<Flow> getFlows(@RequestParam(required = false, defaultValue = "10000") @Valid @ValidId String parentId,
-                               @RequestParam(required = false, defaultValue = "0") @Valid @Min(0) Integer page,
-                               @RequestParam(required = false, defaultValue = "20") @Valid @Min(20) Integer size) {
+    public List<Flow> getFlows(@RequestParam(required = false, name = "parentId", defaultValue = "10000")
+                               @Valid
+                               @ValidId String parentId,
+
+                               @RequestParam(required = false, name = "page", defaultValue = "0")
+                               @Valid
+                               @Min(0) Integer page,
+
+                               @RequestParam(required = false, name = "size", defaultValue = "20")
+                               @Valid
+                               @Min(20) Integer size) {
         return listFlows.invoke(parseLong(parentId), PageRequest.of(page, size));
     }
 
