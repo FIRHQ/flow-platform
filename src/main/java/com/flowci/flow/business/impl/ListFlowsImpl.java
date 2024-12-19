@@ -22,13 +22,13 @@ public class ListFlowsImpl implements ListFlows {
     private final RequestContextHolder requestContextHolder;
 
     @Override
-    public List<Flow> invoke(@Nullable Long rootId, PageRequest pageRequest) {
-        if (rootId == null) {
-            rootId = Flow.ROOT_ID;
+    public List<Flow> invoke(@Nullable Long parentId, PageRequest pageRequest) {
+        if (parentId == null) {
+            parentId = Flow.ROOT_ID;
         }
 
         return flowRepo.findAllByParentIdAndUserIdOrderByCreatedAt(
-                rootId,
+                parentId,
                 requestContextHolder.getUserId(),
                 pageRequest
         );

@@ -4,37 +4,35 @@ import jakarta.validation.Constraint;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import jakarta.validation.Payload;
-import org.springframework.util.StringUtils;
 
 import java.lang.annotation.*;
 
-@Constraint(validatedBy = ValidName.NameValidator.class)
+@Constraint(validatedBy = ValidId.IdValidator.class)
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ValidName {
+public @interface ValidId {
 
-    String message() default "invalid name";
+    String message() default "invalid id";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    class NameValidator implements ConstraintValidator<ValidName, String> {
-
-        private static final int MAX_LENGTH = 100;
-        private static final String REGEX = "^[a-zA-Z0-9_\\-]+$";
+    class IdValidator implements ConstraintValidator<ValidId, String> {
 
         @Override
-        public void initialize(ValidName constraintAnnotation) {
+        public void initialize(ValidId constraintAnnotation) {
             ConstraintValidator.super.initialize(constraintAnnotation);
         }
 
         @Override
         public boolean isValid(String value, ConstraintValidatorContext context) {
-            return StringUtils.hasLength(value)
-                    && value.length() <= MAX_LENGTH
-                    && value.matches(REGEX);
+            try {
+                return Long.parseLong(value) > 0L;
+            } catch (NumberFormatException e) {
+                return false;
+            }
         }
     }
 }

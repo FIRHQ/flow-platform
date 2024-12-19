@@ -7,5 +7,5 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 
 public interface ListFlows {
-    List<Flow> invoke(@Nullable Long rootId, PageRequest pageRequest);
+    List<Flow> invoke(@Nullable Long parentId, PageRequest pageRequest);
 }

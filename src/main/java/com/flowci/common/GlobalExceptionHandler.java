@@ -4,16 +4,17 @@ package com.flowci.common;
 import com.flowci.common.exception.BusinessException;
 import com.flowci.common.model.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.context.MessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import static com.flowci.common.exception.ExceptionUtils.findRootCause;
+import static java.util.stream.Collectors.joining;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -22,7 +23,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public final class GlobalExceptionHandler {
 
     @ResponseBody
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ErrorResponse> inputArgumentException(MethodArgumentNotValidException e) {
         var msg = e.getMessage();
 
@@ -36,6 +37,22 @@ public final class GlobalExceptionHandler {
     }
 
     @ResponseBody
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ErrorResponse> inputArgumentException(HandlerMethodValidationException e) {
+        var message = e.getAllValidationResults()
+                .stream()
+                .map(r -> r.getResolvableErrors()
+                        .stream()
+                        .map(MessageSourceResolvable::getDefaultMessage)
+                        .collect(joining("; ")))
+                .collect(joining("; "));
+
+
+        return ResponseEntity.status(BAD_REQUEST)
+                .body(new ErrorResponse(BAD_REQUEST.value(), message));
+    }
+
+    @ResponseBody
     @ExceptionHandler({
             BusinessException.class,
             MissingServletRequestParameterException.class
@@ -46,7 +63,6 @@ public final class GlobalExceptionHandler {
     }
 
     @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(Throwable.class)
     public ResponseEntity<ErrorResponse> fatalException(Throwable e) {
         log.error("Fatal exception", e);
