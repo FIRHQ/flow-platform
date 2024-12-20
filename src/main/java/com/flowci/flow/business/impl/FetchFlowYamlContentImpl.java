@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
+
 import static java.lang.String.format;
 
 @Slf4j
@@ -22,6 +24,7 @@ public class FetchFlowYamlContentImpl implements FetchFlowYamlContent {
         if (optional.isEmpty()) {
             throw new NotAvailableException(format("flow %s not found", id));
         }
-        return optional.get().getYaml();
+        var yaml = optional.get().getYaml();
+        return Base64.getEncoder().encodeToString(yaml.getBytes());
     }
 }
