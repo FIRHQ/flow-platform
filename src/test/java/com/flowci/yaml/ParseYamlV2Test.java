@@ -4,6 +4,8 @@ import com.flowci.SpringTest;
 import com.flowci.yaml.business.ParseYamlV2;
 import com.flowci.yaml.exception.InvalidYamlException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -84,38 +86,19 @@ class ParseYamlV2Test extends SpringTest {
         assertEquals("host", step2Docker.getNetwork());
     }
 
-    @Test
-    void givenYamlHasInvalidStepName_whenParsing_thenThrowException() {
-        var content = getResourceAsString("yaml/v2_step_name_invalid.yaml");
+    @ParameterizedTest
+    @CsvSource({
+            "v2_step_name_invalid.yaml,step name 'step 1' is invalid",
+            "v2_step_name_duplicate.yaml,step name 'step_1' already exists",
+            "v2_step_depends_on_not_found.yaml,depends on 'step_not_there' is not found",
+            "v2_commands_missing.yaml,at least one command under step 'step_1' is required",
+            "v2_commands_without_script.yaml,bash or powershell is required",
+            "v2_circular_dependency_on_all_depends.yaml,circular dependency found",
+            "v2_circular_dependency_with_separate_step.yaml,circular dependency found",
+    })
+    void givenInvalidYaml_whenParsing_thenThrowException(String yamlFile, String expectedMsg) {
+        var content = getResourceAsString("yaml/" + yamlFile);
         var exception = assertThrows(InvalidYamlException.class, () -> parseYamlV2.invoke(content));
-        assertEquals("step name 'step 1' is invalid", exception.getMessage());
-    }
-
-    @Test
-    void givenYamlHasDuplicateStepName_whenParsing_thenThrowException() {
-        var content = getResourceAsString("yaml/v2_step_name_duplicate.yaml");
-        var exception = assertThrows(InvalidYamlException.class, () -> parseYamlV2.invoke(content));
-        assertEquals("step name 'step_1' already exists", exception.getMessage());
-    }
-
-    @Test
-    void givenYamlHasInvalidDependsOn_whenParsing_thenThrowException() {
-        var content = getResourceAsString("yaml/v2_step_depends_on_not_found.yaml");
-        var exception = assertThrows(InvalidYamlException.class, () -> parseYamlV2.invoke(content));
-        assertEquals("depends on 'step_not_there' is not found", exception.getMessage());
-    }
-
-    @Test
-    void givenYamlThatMissingCommand_whenParsing_thenThrowException() {
-        var content = getResourceAsString("yaml/v2_commands_missing.yaml");
-        var exception = assertThrows(InvalidYamlException.class, () -> parseYamlV2.invoke(content));
-        assertEquals("at least one command under step 'step_1' is required", exception.getMessage());
-    }
-
-    @Test
-    void givenYamlThatMissingScriptInCommand_whenParsing_thenThrowException() {
-        var content = getResourceAsString("yaml/v2_commands_without_script.yaml");
-        var exception = assertThrows(InvalidYamlException.class, () -> parseYamlV2.invoke(content));
-        assertEquals("bash or powershell is required", exception.getMessage());
+        assertEquals(expectedMsg, exception.getMessage());
     }
 }

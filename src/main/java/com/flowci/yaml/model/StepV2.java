@@ -3,12 +3,15 @@ package com.flowci.yaml.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.flowci.common.model.Variables;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.LinkedList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(of = "name", callSuper = false)
 public class StepV2 extends BaseV2 {
 
@@ -38,6 +41,9 @@ public class StepV2 extends BaseV2 {
     // ref to parent flow
     @JsonIgnore
     private FlowV2 parent;
+
+    // ref to next steps
+    private List<StepV2> next = new LinkedList<>();
 
     @Override
     public DockerV2 getDocker() {

@@ -1,0 +1,41 @@
+agents:
+  - k8s
+  - java
+
+condition: |
+  return $FLOWCI_GIT_BRANCH == "develop" || $FLOWCI_GIT_BRANCH == "master";
+
+variables:
+  FLOW_WORKSPACE: "/home/flowci"
+  FLOW_VERSION: "2.0"
+
+# default docker for all steps
+docker:
+  image: "alpine:3"
+  ports:
+    - "8080:8080"
+
+steps:
+  - name: step_a
+    commands:
+      - bash: |
+          echo "step a"
+
+  - name: step_b
+    commands:
+      - bash: |
+          echo "step b"
+
+  - name: step_c
+    depends_on:
+      - step_d
+    commands:
+      - bash: |
+          echo "step c"
+
+  - name: step_d
+    depends_on:
+      - step_c
+    commands:
+      - bash: |
+          echo "step d"

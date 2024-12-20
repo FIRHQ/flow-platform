@@ -2,7 +2,6 @@ package com.flowci.yaml.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.util.StringUtils;
 
 import static org.springframework.util.StringUtils.hasText;
 
