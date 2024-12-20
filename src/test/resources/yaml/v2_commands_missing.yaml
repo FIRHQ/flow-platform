@@ -1,0 +1,25 @@
+agents:
+  - k8s
+  - java
+
+condition: |
+  return $FLOWCI_GIT_BRANCH == "develop" || $FLOWCI_GIT_BRANCH == "master";
+
+variables:
+  FLOW_WORKSPACE: "/home/flowci"
+  FLOW_VERSION: "2.0"
+
+# default docker for all steps
+docker:
+  image: "alpine:3"
+  ports:
+    - "8080:8080"
+
+steps:
+  - name: step_1
+    timeout: 3600
+    allow_failure: true
+    variables:
+      FLOW_WORKSPACE: "/home/step/1"
+      FLOW_VERSION: "2.1"
+      K8S_PATH: "/k8s/test"

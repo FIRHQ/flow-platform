@@ -3,7 +3,6 @@ package com.flowci.flow.business;
 import com.flowci.SpringTest;
 import com.flowci.common.RequestContextHolder;
 import com.flowci.flow.model.Flow;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;

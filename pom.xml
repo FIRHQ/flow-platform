@@ -16,7 +16,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <spring-boot.version>3.3.4</spring-boot.version>
+    <spring-boot.version>3.3.7</spring-boot.version>
     <instancio-junit.version>2.9.0</instancio-junit.version>
     <testcontainers.version>1.20.4</testcontainers.version>
     <springdoc-openapi.version>2.5.0</springdoc-openapi.version>
@@ -122,6 +122,16 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
     </dependency>
 
     <dependency>

@@ -1,0 +1,45 @@
+agents:
+  - k8s
+  - java
+
+condition: |
+  return $FLOWCI_GIT_BRANCH == "develop" || $FLOWCI_GIT_BRANCH == "master";
+
+variables:
+  FLOW_WORKSPACE: "/home/flowci"
+  FLOW_VERSION: "2.0"
+
+# default docker for all steps
+docker:
+  image: "alpine:3"
+  ports:
+    - "8080:8080"
+
+steps:
+  - name: step_1
+    timeout: 3600
+    allow_failure: true
+    variables:
+      FLOW_WORKSPACE: "/home/step/1"
+      FLOW_VERSION: "2.1"
+      K8S_PATH: "/k8s/test"
+    commands:
+      - bash: |
+          echo "step 1 on bash"
+        pwsh: |
+          echo "step 1 on powershell"
+
+  - name: step_2
+    depends_on:
+      - step_not_there
+    docker:
+      image: "ubuntu:24.04"
+      ports:
+        - "6400:6400"
+      entrypoint: [ "/bin/sh" ]
+      network: host
+    commands:
+      - bash: |
+          echo "step 2 on bash"
+        pwsh: |
+          echo "step 2 on powershell"
