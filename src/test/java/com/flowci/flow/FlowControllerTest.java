@@ -5,9 +5,12 @@ import com.flowci.SpringTest;
 import com.flowci.common.model.ErrorResponse;
 import com.flowci.flow.business.CreateFlow;
 import com.flowci.flow.business.FetchFlow;
+import com.flowci.flow.business.FetchFlowYamlContent;
+import com.flowci.flow.business.UpdateFlowYamlContent;
 import com.flowci.flow.model.CreateFlowParam;
 import com.flowci.flow.model.Flow;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,14 +18,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.sql.SQLException;
+import java.util.Base64;
 
 import static com.flowci.TestUtils.newDummyInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class FlowControllerTest extends SpringTest {
@@ -38,6 +42,12 @@ class FlowControllerTest extends SpringTest {
 
     @MockBean
     private FetchFlow fetchFlow;
+
+    @MockBean
+    private FetchFlowYamlContent fetchFlowYamlContent;
+
+    @MockBean
+    private UpdateFlowYamlContent updateFlowYamlContent;
 
     @Test
     void givenCreateFlowParameter_whenCreateFlow_thenReturnFlowId() throws Exception {
@@ -134,5 +144,36 @@ class FlowControllerTest extends SpringTest {
         var error = objectMapper.readValue(r.getResponse().getContentAsString(), ErrorResponse.class);
         assertEquals(400, error.code());
         assertEquals("invalid id", error.message());
+    }
+
+    @Test
+    void givenFlowId_whenFetchingYaml_thenReturnBase64EncodedYaml() throws Exception {
+        var expectedYaml = Base64.getEncoder().encodeToString("some yaml".getBytes());
+        when(fetchFlowYamlContent.invoke(any())).thenReturn(expectedYaml);
+
+        var r = mvc.perform(get("/v2/flows/1001/yaml"))
+                .andExpectAll(
+                        status().is2xxSuccessful(),
+                        header().string("Content-Type", "text/plain;charset=UTF-8")
+                )
+                .andReturn();
+
+        assertEquals(expectedYaml, r.getResponse().getContentAsString());
+    }
+
+    @Test
+    void givenFlowIdAndYaml_whenUpdating_thenYamlIsUpdated() throws Exception {
+        var expectedYaml = Base64.getEncoder().encodeToString("some yaml".getBytes());
+
+        var yamlCaptor = ArgumentCaptor.forClass(String.class);
+        doNothing().when(updateFlowYamlContent).invoke(any(), yamlCaptor.capture());
+
+        var r = mvc.perform(post("/v2/flows/1001/yaml")
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content(expectedYaml))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        assertEquals(expectedYaml, yamlCaptor.getValue());
     }
 }

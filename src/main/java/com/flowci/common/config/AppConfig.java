@@ -16,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Configuration
@@ -42,12 +43,15 @@ public class AppConfig {
             public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
                 converters.clear();
 
+                var jacksonConverter = new MappingJackson2HttpMessageConverter(ObjectMapperFactory.instance());
+                jacksonConverter.setDefaultCharset(StandardCharsets.UTF_8);
+
                 converters.addAll(List.of(
                         new ByteArrayHttpMessageConverter(),
-                        new MappingJackson2HttpMessageConverter(ObjectMapperFactory.instance()),
+                        jacksonConverter,
                         new ResourceHttpMessageConverter(),
                         new AllEncompassingFormHttpMessageConverter(),
-                        new StringHttpMessageConverter()
+                        new StringHttpMessageConverter(StandardCharsets.UTF_8)
                 ));
             }
         };

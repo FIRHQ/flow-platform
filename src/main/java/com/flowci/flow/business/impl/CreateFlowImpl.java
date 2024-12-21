@@ -46,7 +46,7 @@ public class CreateFlowImpl implements CreateFlow {
         flow.setName(param.name());
         flow.setType(Flow.Type.FLOW);
         flow.setVariables(Variables.EMPTY);
-        flow.setParentId(param.rootId() == null ? Flow.ROOT_ID : param.rootId());
+        flow.setParentId(param.parent() == null ? Flow.ROOT_ID : param.parent());
         flow.setCreatedBy(requestContextHolder.getUserId());
         flow.setUpdatedBy(requestContextHolder.getUserId());
         return flow;
