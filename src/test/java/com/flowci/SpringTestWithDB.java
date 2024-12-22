@@ -26,5 +26,6 @@ public abstract class SpringTestWithDB {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
+        registry.add("spring.jpa.show-sql", () -> "true");
     }
 }
