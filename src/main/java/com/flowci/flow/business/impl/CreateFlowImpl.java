@@ -22,13 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class CreateFlowImpl implements CreateFlow {
 
     private final FlowRepo flowRepo;
-
     private final FlowYamlRepo flowYamlRepo;
-
     private final FlowUserRepo flowUserRepo;
-
     private final FetchTemplateContent fetchTemplateContent;
-
     private final RequestContextHolder requestContextHolder;
 
     @Override

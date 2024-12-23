@@ -20,9 +20,7 @@ import java.util.List;
 public class ListFlowsImpl implements ListFlows {
 
     private final FlowRepo flowRepo;
-
     private final FetchFlow fetchFlow;
-
     private final RequestContextHolder requestContextHolder;
 
     @Override

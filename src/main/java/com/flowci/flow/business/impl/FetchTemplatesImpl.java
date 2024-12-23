@@ -24,7 +24,6 @@ public class FetchTemplatesImpl implements FetchTemplates {
             };
 
     private final RestClient templateRestClient;
-
     private final AppProperties appProperties;
 
     public FetchTemplatesImpl(RestClient templateRestClient, AppProperties appProperties) {

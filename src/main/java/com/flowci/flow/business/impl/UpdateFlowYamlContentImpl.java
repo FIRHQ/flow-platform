@@ -19,9 +19,7 @@ import static java.lang.String.format;
 public class UpdateFlowYamlContentImpl implements UpdateFlowYamlContent {
 
     private final ParseYamlV2 parseYamlV2;
-
     private final FlowYamlRepo flowYamlRepo;
-
     private final RequestContextHolder requestContextHolder;
 
     @Override

@@ -15,7 +15,6 @@ import static com.flowci.common.config.CacheConfig.YAML_TEMPLATE_CACHE_MANAGER;
 public class FetchTemplateContentImpl implements FetchTemplateContent {
 
     private final RestClient restClient = RestClient.create();
-
     private final FetchTemplates fetchTemplates;
 
     public FetchTemplateContentImpl(FetchTemplates fetchTemplates) {

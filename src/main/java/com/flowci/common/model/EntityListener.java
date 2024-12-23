@@ -9,8 +9,9 @@ public class EntityListener {
     @PrePersist
     public void prePersist(Object entity) {
         if (entity instanceof EntityBase e) {
-            e.createdAt = TimeUtils.now();
-            e.updatedAt = TimeUtils.now();
+            var now = TimeUtils.now();
+            e.createdAt = now;
+            e.updatedAt = now;
         }
     }
 
