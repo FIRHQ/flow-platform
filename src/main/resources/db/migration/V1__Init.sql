@@ -6,8 +6,8 @@ CREATE TABLE flows
     type       VARCHAR(10)                 NOT NULL,
     parent_id  BIGINT                      NOT NULL,
     name       VARCHAR(100) UNIQUE         NOT NULL,
-    variables  TEXT                        NOT NULL,
-    git_link   TEXT,
+    variables  json                        NOT NULL,
+    git_link   json,
     yaml       TEXT,
     created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     created_by BIGINT,
@@ -50,6 +50,7 @@ CREATE TABLE build
     build_alias    varchar(50)                 NOT NULL,
     trigger        varchar(20)                 NOT NULL,
     status         varchar(20)                 NOT NULL,
+    agent_tags     varchar(20)[]               NOT NULL,
     commit_hash    varchar(40),
     agent_id       BIGINT,
     created_at     TIMESTAMP WITHOUT TIME ZONE NOT NULL,
@@ -90,7 +91,7 @@ EXECUTE PROCEDURE auto_build_sequence();
 CREATE TABLE build_yaml
 (
     id         BIGINT PRIMARY KEY,
-    variables  TEXT                        NOT NULL,
+    variables  json                        NOT NULL,
     yaml       TEXT                        NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     created_by BIGINT,

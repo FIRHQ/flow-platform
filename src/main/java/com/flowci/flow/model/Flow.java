@@ -2,6 +2,7 @@ package com.flowci.flow.model;
 
 import com.flowci.common.model.EntityBase;
 import com.flowci.common.model.Variables;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,9 +34,9 @@ public final class Flow extends EntityBase {
     // parent group id
     private Long parentId = ROOT_ID;
 
-    @Convert(converter = Variables.AttributeConverter.class)
+    @org.hibernate.annotations.Type(JsonType.class)
     private Variables variables;
 
-    @Convert(converter = GitLink.Converter.class)
+    @org.hibernate.annotations.Type(JsonType.class)
     private GitLink gitLink;
 }

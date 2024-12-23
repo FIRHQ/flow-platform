@@ -1,6 +1,7 @@
 package com.flowci.build.model;
 
 import com.flowci.common.model.EntityBase;
+import io.hypersistence.utils.hibernate.type.array.StringArrayType;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -74,9 +75,15 @@ public class Build extends EntityBase {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @org.hibernate.annotations.Type(StringArrayType.class)
+    private String[] agentTags;
+
     @Nullable
     private String commitHash;
 
+    /**
+     * Assigned agent id
+     */
     @Nullable
     private Long agentId;
 }

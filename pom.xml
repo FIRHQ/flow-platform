@@ -24,6 +24,8 @@
     <pact.version>4.6.16</pact.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+    <hypersistence-utils-hibernate-63.version>3.9.0</hypersistence-utils-hibernate-63.version>
+    <jackson.version>2.17.3</jackson.version>
   </properties>
 
   <dependencyManagement>
@@ -99,6 +101,18 @@
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.hypersistence</groupId>
+      <artifactId>hypersistence-utils-hibernate-63</artifactId>
+      <version>${hypersistence-utils-hibernate-63.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-jakarta-xmlbind-annotations</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
