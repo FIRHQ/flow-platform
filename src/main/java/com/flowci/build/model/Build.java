@@ -2,11 +2,13 @@ package com.flowci.build.model;
 
 import com.flowci.common.model.EntityBase;
 import io.hypersistence.utils.hibernate.type.array.StringArrayType;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Generated;
+import org.hibernate.annotations.Type;
 import org.hibernate.generator.EventType;
 
 import java.util.Set;
@@ -78,8 +80,8 @@ public class Build extends EntityBase {
     @org.hibernate.annotations.Type(StringArrayType.class)
     private String[] agentTags;
 
-    @Nullable
-    private String commitHash;
+    @Type(JsonType.class)
+    private GitRef gitRef;
 
     /**
      * Assigned agent id

@@ -1,26 +1,26 @@
 package com.flowci.build.business.impl;
 
-import com.flowci.build.business.CreateNewBuild;
+import com.flowci.build.business.CreateBuild;
 import com.flowci.build.business.TriggerBuild;
+import com.flowci.build.business.WaitForAgent;
 import com.flowci.build.model.Build;
 import com.flowci.common.model.Variables;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Component
 @AllArgsConstructor
 public class TriggerBuildImpl implements TriggerBuild {
 
-    private final CreateNewBuild createNewBuild;
+    private final CreateBuild createBuild;
+    private final WaitForAgent waitForAgent;
 
     @Override
+    @Transactional
     public Build invoke(Long flowId, Build.Trigger trigger, Variables inputs) {
-        var build = createNewBuild.invoke(flowId, trigger, inputs);
-
-        // put to queue, and wait
-
-        return null;
+        var build = createBuild.invoke(flowId, trigger, inputs);
+        waitForAgent.invoke(build.getId());
+        return build;
     }
 }

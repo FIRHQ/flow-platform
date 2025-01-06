@@ -51,7 +51,7 @@ CREATE TABLE build
     trigger        varchar(20)                 NOT NULL,
     status         varchar(20)                 NOT NULL,
     agent_tags     varchar(20)[]               NOT NULL,
-    commit_hash    varchar(40),
+    git_ref        json,
     agent_id       BIGINT,
     created_at     TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     created_by     BIGINT,

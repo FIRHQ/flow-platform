@@ -1,6 +1,7 @@
 package com.flowci.build.business.impl;
 
-import com.flowci.build.business.CreateNewBuild;
+import com.flowci.build.business.CreateBuild;
+import com.flowci.build.business.TriggerBuild;
 import com.flowci.build.model.Build;
 import com.flowci.build.model.BuildYaml;
 import com.flowci.build.repo.BuildRepo;
@@ -22,7 +23,7 @@ import java.util.Set;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class CreateNewBuildImpl implements CreateNewBuild {
+public class CreateBuildImpl implements CreateBuild {
 
     private final FetchFlow fetchFlow;
     private final FetchFlowYamlContent fetchFlowYamlContent;
@@ -43,7 +44,7 @@ public class CreateNewBuildImpl implements CreateNewBuild {
                 : new HashSet<>(yamlObj.getAgents());
 
         var build = new Build();
-        build.setFlowId(flowId);
+        build.setFlowId(flow.getId());
         build.setTrigger(trigger);
         build.setStatus(Build.Status.CREATED);
         build.setAgentTags(agentTags.toArray(new String[0]));

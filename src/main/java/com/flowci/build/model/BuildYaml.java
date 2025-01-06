@@ -3,7 +3,6 @@ package com.flowci.build.model;
 import com.flowci.common.model.EntityBase;
 import com.flowci.common.model.Variables;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -20,7 +19,7 @@ public class BuildYaml extends EntityBase {
     @Id
     private Long id;
 
-    // ref to flow variables
+    // ref to flow variables and extra inputs
     @Type(JsonType.class)
     private Variables variables;
 
