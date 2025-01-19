@@ -7,14 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 import static com.flowci.TestUtils.newDummyInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class ListFlowsTest extends SpringTest {
@@ -50,7 +47,7 @@ class ListFlowsTest extends SpringTest {
         when(requestContextHolder.getUserId()).thenReturn(userIdMock);
 
         // when fetching list flow without parent id
-        var list = listFlows.invoke(null, PageRequest.of(0, 1));
+        var list = listFlows.invoke(null);
         assertEquals(2, list.size());
 
         // verify the parent should be root id as default

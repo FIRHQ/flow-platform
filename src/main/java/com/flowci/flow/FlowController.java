@@ -3,6 +3,7 @@ package com.flowci.flow;
 import com.flowci.common.exception.DuplicateException;
 import com.flowci.common.exception.ExceptionUtils;
 import com.flowci.common.validator.ValidId;
+import com.flowci.common.validator.ValidName;
 import com.flowci.flow.business.*;
 import com.flowci.flow.model.CreateFlowParam;
 import com.flowci.flow.model.Flow;
@@ -37,9 +38,9 @@ public class FlowController {
     private final FetchFlowYamlContent fetchFlowYamlContent;
     private final UpdateFlowYamlContent updateFlowYamlContent;
 
-    @GetMapping("/{id}")
-    public Flow getFlow(@PathVariable("id") @Valid @ValidId String id) {
-        return fetchFlow.invoke(parseLong(id));
+    @GetMapping("/{name}")
+    public Flow getFlow(@PathVariable("name") @Valid @ValidName String name) {
+        return fetchFlow.invoke(name);
     }
 
     @Operation(description = "get flow list by page")
@@ -81,9 +82,10 @@ public class FlowController {
                     )
             )
     )
-    @GetMapping(value = "/{id}/yaml", produces = MediaType.TEXT_PLAIN_VALUE)
-    public String getYaml(@PathVariable("id") @Valid @ValidId String id) {
-        return fetchFlowYamlContent.invoke(parseLong(id), true);
+    @GetMapping(value = "/{name}/yaml", produces = MediaType.TEXT_PLAIN_VALUE)
+    public String getYaml(@PathVariable("name") @Valid @ValidName String name) {
+        var flow = fetchFlow.invoke(name);
+        return fetchFlowYamlContent.invoke(flow.getId(), true);
     }
 
     @Operation(
@@ -99,9 +101,10 @@ public class FlowController {
                     )
             )
     )
-    @PostMapping(value = "/{id}/yaml", consumes = MediaType.TEXT_PLAIN_VALUE)
-    public void updateYaml(@PathVariable("id") @Valid @ValidId String id,
+    @PostMapping(value = "/{name}/yaml", consumes = MediaType.TEXT_PLAIN_VALUE)
+    public void updateYaml(@PathVariable("name") @Valid @ValidName String name,
                            @RequestBody String b64Yaml) {
-        updateFlowYamlContent.invoke(parseLong(id), b64Yaml);
+        var flow = fetchFlow.invoke(name);
+        updateFlowYamlContent.invoke(flow.getId(), b64Yaml);
     }
 }

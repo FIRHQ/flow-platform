@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.Base64;
 
 import static com.flowci.TestUtils.newDummyInstance;
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -123,11 +124,14 @@ class FlowControllerTest extends SpringTest {
     }
 
     @Test
-    void givenFlowId_whenFetching_thenReturnFlow() throws Exception {
-        var mockFlow = newDummyInstance(Flow.class).create();
-        when(fetchFlow.invoke(anyLong())).thenReturn(mockFlow);
+    void givenFlowName_whenFetching_thenReturnFlow() throws Exception {
+        var mockFlow = newDummyInstance(Flow.class)
+                .set(field(Flow::getName), "hello_world")
+                .create();
 
-        var r = mvc.perform(get("/v2/flows/" + mockFlow.getId()))
+        when(fetchFlow.invoke(anyString())).thenReturn(mockFlow);
+
+        var r = mvc.perform(get(String.format("/v2/flows/%s", mockFlow.getName())))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -136,22 +140,16 @@ class FlowControllerTest extends SpringTest {
     }
 
     @Test
-    void givenInvalidFlowId_whenFetching_thenReturnError() throws Exception {
-        var r = mvc.perform(get("/v2/flows/-1"))
-                .andExpect(status().is4xxClientError())
-                .andReturn();
+    void givenFlowName_whenFetchingYaml_thenReturnBase64EncodedYaml() throws Exception {
+        var mockFlow = newDummyInstance(Flow.class)
+                .set(field(Flow::getName), "some_name")
+                .create();
 
-        var error = objectMapper.readValue(r.getResponse().getContentAsString(), ErrorResponse.class);
-        assertEquals(400, error.code());
-        assertEquals("invalid id", error.message());
-    }
-
-    @Test
-    void givenFlowId_whenFetchingYaml_thenReturnBase64EncodedYaml() throws Exception {
         var expectedYaml = Base64.getEncoder().encodeToString("some yaml".getBytes());
+        when(fetchFlow.invoke(anyString())).thenReturn(mockFlow);
         when(fetchFlowYamlContent.invoke(any(), eq(true))).thenReturn(expectedYaml);
 
-        var r = mvc.perform(get("/v2/flows/1001/yaml"))
+        var r = mvc.perform(get(String.format("/v2/flows/%s/yaml", mockFlow.getName())))
                 .andExpectAll(
                         status().is2xxSuccessful(),
                         header().string("Content-Type", "text/plain;charset=UTF-8"))
@@ -161,13 +159,18 @@ class FlowControllerTest extends SpringTest {
     }
 
     @Test
-    void givenFlowIdAndYaml_whenUpdating_thenYamlIsUpdated() throws Exception {
+    void givenFlowNameAndYaml_whenUpdating_thenYamlIsUpdated() throws Exception {
+        var mockFlow = newDummyInstance(Flow.class)
+                .set(field(Flow::getName), "some_name")
+                .create();
+        when(fetchFlow.invoke(anyString())).thenReturn(mockFlow);
+
         var expectedYaml = Base64.getEncoder().encodeToString("some yaml".getBytes());
 
         var yamlCaptor = ArgumentCaptor.forClass(String.class);
         doNothing().when(updateFlowYamlContent).invoke(any(), yamlCaptor.capture());
 
-        var r = mvc.perform(post("/v2/flows/1001/yaml")
+        mvc.perform(post(String.format("/v2/flows/%s/yaml", mockFlow.getName()))
                         .contentType(MediaType.TEXT_PLAIN)
                         .content(expectedYaml))
                 .andExpect(status().is2xxSuccessful())
