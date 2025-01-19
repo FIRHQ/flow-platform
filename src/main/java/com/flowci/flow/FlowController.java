@@ -44,6 +44,7 @@ public class FlowController {
         return fetchFlow.invoke(parseLong(id));
     }
 
+    @Operation(description = "get flow list by page")
     @GetMapping
     public List<Flow> getFlows(@RequestParam(required = false, name = "parentId", defaultValue = "10000")
                                @Valid @ValidId
@@ -59,6 +60,7 @@ public class FlowController {
         return listFlows.invoke(parseLong(parentId), PageRequest.of(page, size));
     }
 
+    @Operation(description = "create a new flow")
     @PostMapping
     public Flow createFlow(@RequestBody @Valid CreateFlowParam param) {
         try {
@@ -71,6 +73,7 @@ public class FlowController {
         }
     }
 
+    @Operation(description = "get yaml templates")
     @GetMapping("/templates")
     public List<YamlTemplate> getTemplates() {
         return fetchTemplates.invoke();
@@ -90,7 +93,7 @@ public class FlowController {
     )
     @GetMapping(value = "/{id}/yaml", produces = MediaType.TEXT_PLAIN_VALUE)
     public String getYaml(@PathVariable("id") @Valid @ValidId String id) {
-        return fetchFlowYamlContent.invoke(parseLong(id));
+        return fetchFlowYamlContent.invoke(parseLong(id), true);
     }
 
     @Operation(

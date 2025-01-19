@@ -125,7 +125,7 @@ class FlowControllerTest extends SpringTest {
     @Test
     void givenFlowId_whenFetching_thenReturnFlow() throws Exception {
         var mockFlow = newDummyInstance(Flow.class).create();
-        when(fetchFlow.invoke(any())).thenReturn(mockFlow);
+        when(fetchFlow.invoke(anyLong())).thenReturn(mockFlow);
 
         var r = mvc.perform(get("/v2/flows/" + mockFlow.getId()))
                 .andExpect(status().is2xxSuccessful())
@@ -149,13 +149,12 @@ class FlowControllerTest extends SpringTest {
     @Test
     void givenFlowId_whenFetchingYaml_thenReturnBase64EncodedYaml() throws Exception {
         var expectedYaml = Base64.getEncoder().encodeToString("some yaml".getBytes());
-        when(fetchFlowYamlContent.invoke(any())).thenReturn(expectedYaml);
+        when(fetchFlowYamlContent.invoke(any(), eq(true))).thenReturn(expectedYaml);
 
         var r = mvc.perform(get("/v2/flows/1001/yaml"))
                 .andExpectAll(
                         status().is2xxSuccessful(),
-                        header().string("Content-Type", "text/plain;charset=UTF-8")
-                )
+                        header().string("Content-Type", "text/plain;charset=UTF-8"))
                 .andReturn();
 
         assertEquals(expectedYaml, r.getResponse().getContentAsString());

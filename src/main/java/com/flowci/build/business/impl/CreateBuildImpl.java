@@ -1,7 +1,6 @@
 package com.flowci.build.business.impl;
 
 import com.flowci.build.business.CreateBuild;
-import com.flowci.build.business.TriggerBuild;
 import com.flowci.build.model.Build;
 import com.flowci.build.model.BuildYaml;
 import com.flowci.build.repo.BuildRepo;
@@ -12,6 +11,7 @@ import com.flowci.flow.business.FetchFlow;
 import com.flowci.flow.business.FetchFlowYamlContent;
 import com.flowci.flow.model.Flow;
 import com.flowci.yaml.business.ParseYamlV2;
+import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +34,10 @@ public class CreateBuildImpl implements CreateBuild {
 
     @Override
     @Transactional
-    public Build invoke(Long flowId, Build.Trigger trigger, Variables inputs) {
+    public Build invoke(Long flowId, Build.Trigger trigger, @Nullable Variables inputs) {
         var flow = fetchFlow.invoke(flowId);
 
-        var yaml = fetchFlowYamlContent.invoke(flowId);
+        var yaml = fetchFlowYamlContent.invoke(flowId, false);
         var yamlObj = parseYamlV2.invoke(yaml);
         var agentTags = yamlObj.getAgents() == null
                 ? Set.<String>of()
@@ -65,6 +65,10 @@ public class CreateBuildImpl implements CreateBuild {
     }
 
     private Variables toBuildVariables(Flow flow, Variables inputs) {
+        if (inputs == null) {
+            return flow.getVariables();
+        }
+
         var variables = new Variables(flow.getVariables());
         variables.putAll(inputs); // inputs has top priority
         return variables;

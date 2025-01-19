@@ -18,8 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static com.flowci.TestUtils.newDummyInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 class CreateBuildTest extends SpringTest {
@@ -44,7 +43,7 @@ class CreateBuildTest extends SpringTest {
         var mockFlow = newDummyInstance(Flow.class).create();
         when(fetchFlow.invoke(anyLong())).thenReturn(mockFlow);
         var mockFlowYaml = newDummyInstance(FlowYaml.class).create();
-        when(fetchFlowYamlContent.invoke(anyLong())).thenReturn(mockFlowYaml.getYaml());
+        when(fetchFlowYamlContent.invoke(anyLong(), eq(false))).thenReturn(mockFlowYaml.getYaml());
         when(parseYamlV2.invoke(anyString())).thenReturn(Instancio.of(FlowV2.class).create());
 
         var mockBuildRepo = mockRepositoriesConfig.getBuildRepo();

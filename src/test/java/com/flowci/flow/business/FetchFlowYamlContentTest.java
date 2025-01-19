@@ -32,7 +32,7 @@ class FetchFlowYamlContentTest extends SpringTest {
         var mockFlowYamlRepo = repositoriesConfig.getFlowYamlRepo();
         when(mockFlowYamlRepo.findById(any())).thenReturn(Optional.of(mockFlowYaml));
 
-        var base64Yaml = fetchFlowYamlContent.invoke(1L);
+        var base64Yaml = fetchFlowYamlContent.invoke(1L, true);
         assertEquals(Base64.getEncoder().encodeToString(expectedYaml.getBytes()), base64Yaml);
     }
 }

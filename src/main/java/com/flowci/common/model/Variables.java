@@ -1,5 +1,6 @@
 package com.flowci.common.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 
 import java.io.Serializable;
@@ -24,5 +25,11 @@ public final class Variables extends HashMap<String, String> implements Serializ
 
     public Variables(Map<String, String> data) {
         this.putAll(data);
+    }
+
+    @Override
+    @JsonIgnore
+    public boolean isEmpty() {
+        return super.isEmpty();
     }
 }

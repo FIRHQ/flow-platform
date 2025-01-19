@@ -19,12 +19,14 @@ public class FetchFlowYamlContentImpl implements FetchFlowYamlContent {
     private final FlowYamlRepo flowYamlRepo;
 
     @Override
-    public String invoke(Long id) {
+    public String invoke(Long id, boolean returnB64) {
         var optional = flowYamlRepo.findById(id);
         if (optional.isEmpty()) {
             throw new NotAvailableException(format("flow %s not found", id));
         }
         var yaml = optional.get().getYaml();
-        return Base64.getEncoder().encodeToString(yaml.getBytes());
+        return returnB64
+                ? Base64.getEncoder().encodeToString(yaml.getBytes())
+                : yaml;
     }
 }

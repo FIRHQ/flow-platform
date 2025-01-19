@@ -4,7 +4,8 @@ public interface FetchFlowYamlContent {
     /**
      * Fetch yaml content
      * @param id flow id
-     * @return YAML with Base64 format
+     * @param returnB64 whether return base64 content
+     * @return YAML or with Base64 format
      */
-    String invoke(Long id);
+    String invoke(Long id, boolean returnB64);
 }

@@ -7,9 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FlowRepo extends JpaRepository<Flow, Long> {
+
+    Optional<Flow> findByName(String name);
 
     @Query("select f from Flow f " +
             "where f.id in (select fu.flowId from FlowUser fu where fu.userId = ?2) " +

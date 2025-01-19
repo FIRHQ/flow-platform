@@ -5,6 +5,7 @@ import com.flowci.build.business.TriggerBuild;
 import com.flowci.build.business.WaitForAgent;
 import com.flowci.build.model.Build;
 import com.flowci.common.model.Variables;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ public class TriggerBuildImpl implements TriggerBuild {
 
     @Override
     @Transactional
-    public Build invoke(Long flowId, Build.Trigger trigger, Variables inputs) {
+    public Build invoke(Long flowId, Build.Trigger trigger, @Nullable Variables inputs) {
         var build = createBuild.invoke(flowId, trigger, inputs);
         waitForAgent.invoke(build.getId());
         return build;
