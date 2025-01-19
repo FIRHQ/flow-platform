@@ -7,7 +7,6 @@ import org.instancio.InstancioApi;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.PageRequest;
 
 import static com.flowci.TestUtils.newDummyInstance;
 import static org.instancio.Select.field;
@@ -64,12 +63,10 @@ class FlowRepoTest extends SpringTestWithDB {
         flowUserRepo.save(user1);
         flowUserRepo.save(user2);
 
-        var flowsForUser1 = flowRepo.findAllByParentIdAndUserIdOrderByCreatedAt(
-                flow.getParentId(), user1.getUserId(), PageRequest.of(0, 1));
+        var flowsForUser1 = flowRepo.findAllByParentIdAndUserIdOrderByCreatedAt(flow.getParentId(), user1.getUserId());
         assertEquals(1, flowsForUser1.size());
 
-        var flowsForUser2 = flowRepo.findAllByParentIdAndUserIdOrderByCreatedAt(
-                flow.getParentId(), user2.getUserId(), PageRequest.of(0, 1));
+        var flowsForUser2 = flowRepo.findAllByParentIdAndUserIdOrderByCreatedAt(flow.getParentId(), user2.getUserId());
         assertEquals(1, flowsForUser2.size());
     }
 

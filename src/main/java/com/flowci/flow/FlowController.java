@@ -14,10 +14,8 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,16 +46,8 @@ public class FlowController {
     @GetMapping
     public List<Flow> getFlows(@RequestParam(required = false, name = "parentId", defaultValue = "10000")
                                @Valid @ValidId
-                               String parentId,
-
-                               @RequestParam(required = false, name = "page", defaultValue = "0")
-                               @Valid @Min(0)
-                               Integer page,
-
-                               @RequestParam(required = false, name = "size", defaultValue = "20")
-                               @Valid @Min(20)
-                               Integer size) {
-        return listFlows.invoke(parseLong(parentId), PageRequest.of(page, size));
+                               String parentId) {
+        return listFlows.invoke(parseLong(parentId));
     }
 
     @Operation(description = "create a new flow")

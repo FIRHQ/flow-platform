@@ -1,6 +1,7 @@
 package com.flowci.build.business.impl;
 
 import com.flowci.build.business.CreateBuild;
+import com.flowci.build.business.FetchBuild;
 import com.flowci.build.business.TriggerBuild;
 import com.flowci.build.business.WaitForAgent;
 import com.flowci.build.model.Build;
@@ -16,12 +17,13 @@ public class TriggerBuildImpl implements TriggerBuild {
 
     private final CreateBuild createBuild;
     private final WaitForAgent waitForAgent;
+    private final FetchBuild fetchBuild;
 
     @Override
     @Transactional
     public Build invoke(Long flowId, Build.Trigger trigger, @Nullable Variables inputs) {
         var build = createBuild.invoke(flowId, trigger, inputs);
         waitForAgent.invoke(build.getId());
-        return build;
+        return fetchBuild.invoke(build.getId());
     }
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v2/flows")
-@Tag(name = "build for flows")
+@Tag(name = "flow")
 @AllArgsConstructor
 public class FlowBuildController {
 

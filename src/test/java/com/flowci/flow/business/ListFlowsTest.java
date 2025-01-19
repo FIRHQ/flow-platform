@@ -39,8 +39,7 @@ class ListFlowsTest extends SpringTest {
         var userIdCaptor = ArgumentCaptor.forClass(Long.class);
         when(flowRepoMock.findAllByParentIdAndUserIdOrderByCreatedAt(
                 parentIdCaptor.capture(),
-                userIdCaptor.capture(),
-                any(Pageable.class))
+                userIdCaptor.capture())
         ).thenReturn(List.of(newDummyInstance(Flow.class).create()));
 
         // mock fetch root flow
@@ -57,7 +56,7 @@ class ListFlowsTest extends SpringTest {
         // verify the parent should be root id as default
         assertEquals(Flow.ROOT_ID, parentIdCaptor.getValue());
         verify(flowRepoMock, times(1)).findAllByParentIdAndUserIdOrderByCreatedAt(
-                parentIdCaptor.capture(), userIdCaptor.capture(), any(Pageable.class));
+                parentIdCaptor.capture(), userIdCaptor.capture());
 
         // verify the root flow also fetched
         verify(fetchFlow, times(1)).invoke(eq(Flow.ROOT_ID));

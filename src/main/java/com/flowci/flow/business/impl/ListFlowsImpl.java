@@ -8,7 +8,6 @@ import com.flowci.flow.repo.FlowRepo;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -24,15 +23,14 @@ public class ListFlowsImpl implements ListFlows {
     private final RequestContextHolder requestContextHolder;
 
     @Override
-    public List<Flow> invoke(@Nullable Long parentId, PageRequest pageRequest) {
+    public List<Flow> invoke(@Nullable Long parentId) {
         if (parentId == null) {
             parentId = Flow.ROOT_ID;
         }
 
         var list = flowRepo.findAllByParentIdAndUserIdOrderByCreatedAt(
                 parentId,
-                requestContextHolder.getUserId(),
-                pageRequest
+                requestContextHolder.getUserId()
         );
 
         var r = new ArrayList<Flow>(list.size() + 1);
